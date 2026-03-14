@@ -1281,6 +1281,7 @@
   .bali-note-close { display: block; margin-top: 8px; background: none; border: none; font-family: var(--serif); font-style: italic; font-size: 11px; color: rgba(200,107,58,0.5); cursor: pointer; padding: 0; }
   .bali-note-close:hover { color: #c86b3a; }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -1830,7 +1831,7 @@ function placeCardHTML(item, city) {
 
   let noteHTML = item.note ? `<div class="sg-dani-note-wrap"><button class="sg-note-btn" onclick="toggleDaniNote(this)"><span class="sg-note-chevron">›</span> dani says</button><div class="sg-dani-note" style="display:none"><p class="sg-dani-note-text">${item.note}</p><button class="sg-note-close" onclick="toggleDaniNote(this.closest('.sg-dani-note-wrap').querySelector('.sg-note-btn'))">close ×</button></div></div>` : '';
   let mustTryHTML = item.mustTry ? `<div class="must-try"><span class="must-try-label">must try</span> ${item.mustTry}</div>` : '';
-  let mapsBtn = `<a class="btn-maps" href="${mapsHref}" target="_blank"><svg viewBox="0 0 14 14" fill="none" width="12" height="12"><circle cx="7" cy="6" r="2.8" stroke="currentColor" stroke-width="1.1"/><path d="M7 1C4.2 1 2 3.2 2 6c0 3.5 5 8 5 8s5-4.5 5-8c0-2.8-2.2-5-5-5z" stroke="currentColor" stroke-width="1.1" fill="none"/></svg> open in maps</a>`;
+  let mapsBtn = `<a class="btn-maps" href="${mapsHref}" onclick="event.stopPropagation()" target="_blank"><svg viewBox="0 0 14 14" fill="none" width="12" height="12"><circle cx="7" cy="6" r="2.8" stroke="currentColor" stroke-width="1.1"/><path d="M7 1C4.2 1 2 3.2 2 6c0 3.5 5 8 5 8s5-4.5 5-8c0-2.8-2.2-5-5-5z" stroke="currentColor" stroke-width="1.1" fill="none"/></svg> open in maps</a>`;
   let moreBtn = `<button class="btn-maps" style="background:transparent;border:1px solid rgba(42,37,32,0.25);color:var(--ink);cursor:pointer;font-family:var(--sans);font-size:11px;border-radius:5px;padding:5px 12px" onclick="openDetailById('${pid}')">see more</button>`;
   let checkBox = `<label class="visit-check"><input type="checkbox" ${visited?'checked':''} onchange="markVisited('${item.name}','${pid}',this.checked)"><span class="visit-label">visited</span></label>`;
 
@@ -1839,7 +1840,7 @@ function placeCardHTML(item, city) {
     photoStrip = `<div class="card-photo-strip"><img src="${item.photos[0]}" alt="${item.name}" loading="lazy"></div>`;
   }
 
-  return `<div class="place-card ${visited?'card-visited':''}" id="card-${pid}">${photoStrip}${stampHTML}<div style="padding:14px 16px 12px"><div class="place-top"><div class="place-name">${item.name}</div><div class="place-type">${item.type}</div></div><div class="place-desc">${item.desc}</div>${mustTryHTML}${noteHTML}<div class="place-actions">${mapsBtn}${moreBtn}</div>${checkBox}</div></div>`;
+  return `<div class="place-card ${visited?'card-visited':''}" id="card-${pid}" onclick="openDetailById('${pid}')" style="cursor:pointer">${photoStrip}${stampHTML}<div style="padding:14px 16px 12px"><div class="place-top"><div class="place-name">${item.name}</div><div class="place-type">${item.type}</div></div><div class="place-desc">${item.desc}</div>${mustTryHTML}${noteHTML}<div class="place-actions">${mapsBtn}${moreBtn}</div></div></div>`;
 }
 
 function toggleDaniNote(btn) {
@@ -1960,11 +1961,11 @@ function baliCardHTML(item, city) {
   }
 
   let noteHTML = item.note ? `<div class="bali-note-card"><button class="bali-note-toggle" onclick="toggleBaliNote(this)"><span class="bali-note-toggle-icon">›</span> <em style="font-family:var(--serif);font-style:italic;font-size:11px;color:#c86b3a">"${item.note}"</em></button><div class="bali-note-body" style="display:none">${item.note}</div></div>` : '';
-  let mapsBtn = `<a class="bali-btn-maps" href="${mapsHref}" target="_blank"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="6" r="2.8" stroke="currentColor" stroke-width="1.1"/><path d="M7 1C4.2 1 2 3.2 2 6c0 3.5 5 8 5 8s5-4.5 5-8c0-2.8-2.2-5-5-5z" stroke="currentColor" stroke-width="1.1" fill="none"/></svg> open in maps</a>`;
+  let mapsBtn = `<a class="bali-btn-maps" href="${mapsHref}" onclick="event.stopPropagation()" target="_blank"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="6" r="2.8" stroke="currentColor" stroke-width="1.1"/><path d="M7 1C4.2 1 2 3.2 2 6c0 3.5 5 8 5 8s5-4.5 5-8c0-2.8-2.2-5-5-5z" stroke="currentColor" stroke-width="1.1" fill="none"/></svg> open in maps</a>`;
   let moreBtn = `<button class="bali-btn-more" onclick="openDetailById('${pid}')">see more</button>`;
   let checkBox = `<label class="bali-visit-check"><input type="checkbox" ${visited?'checked':''} onchange="markVisited('${item.name}','${pid}',this.checked)"><span class="bali-visit-label">visited</span></label>`;
 
-  return `<div class="bali-card ${visited?'visited':''}" id="card-${pid}">
+  return `<div class="bali-card" id="card-${pid}" onclick="openDetailById('${pid}')" style="cursor:pointer">
     <div class="bali-card-img-wrap">${photoHTML}</div>
     ${stampHTML}
     <div class="bali-card-body">
@@ -1972,7 +1973,6 @@ function baliCardHTML(item, city) {
       <div class="bali-card-desc">${item.desc}</div>
       ${noteHTML}
       <div class="bali-card-actions">${mapsBtn}${moreBtn}</div>
-      ${checkBox}
     </div>
   </div>`;
 }
